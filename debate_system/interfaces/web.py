@@ -76,10 +76,6 @@ def main() -> None:
                     with st.chat_message(name=speaker, avatar=avatar):
                         st.markdown(entry.get("content", ""))
 
-                if result.get("summary"):
-                    st.subheader("Summary")
-                    st.markdown(st.markdownresult["summary"])
-
                 transcript = _format_transcript(result)
                 st.download_button(
                     label="Download transcript",

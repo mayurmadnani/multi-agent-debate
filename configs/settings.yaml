@@ -1,0 +1,23 @@
+model:
+  backend: "ollama"
+  model_name: "gemma3:4b"
+  timeout: 60
+  quantization: None
+  device: "auto"
+
+memory:
+  persist_path: "data/memory.json"
+  auto_save: true
+  max_entries: 100
+
+orchestrator:
+  default_rounds: 1
+  enable_summary: true
+  random_seed: null
+  max_retries: 2
+  random_order: true
+
+logging:
+  level: "INFO"
+  file: "logs/debate.log"
+  console: true

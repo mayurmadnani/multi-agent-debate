@@ -24,8 +24,8 @@ class DebateAPI:
         setup_logging(self.config_manager.get_logging_config())
         self.orchestrator = build_orchestrator(config_manager=self.config_manager)
 
-    def ask(self, question: str, rounds: Optional[int] = None) -> Dict[str, Any]:
-        return self.orchestrator.run_debate(question, rounds=rounds)
+    def ask(self, question: str, rounds: Optional[int] = None, enable_summary: Optional[bool] = None) -> Dict[str, Any]:
+        return self.orchestrator.run_debate(question, rounds=rounds, enable_summary=enable_summary)
 
     def get_memory(self, key: str) -> Optional[Any]:
         return self.orchestrator.memory.get_entry(key)

@@ -75,14 +75,18 @@ class BaseAgent(ABC):
         return "\n".join(parts)
 
     def extract_response(self, raw_output: str) -> str:
+        """Extract the agent's core response from raw model output."""
         response = raw_output.strip()
-        if response.startswith(f"{self.name}:"):
-            response = response[len(self.name) + 1 :].strip()
-        if response.startswith(f"[{self.name}]"):
-            response = response[len(self.name) + 2 :].strip()
+        
+        # Remove common speaker prefixes
+        prefixes = [f"{self.name}:", f"[{self.name}]"]
+        for prefix in prefixes:
+            if response.lower().startswith(prefix.lower()):
+                response = response[len(prefix):].strip()
+                break
 
-        lines = [line.strip() for line in response.split("\n") if line.strip()]
-        return lines[0] if lines else response
+        # Return the response, preserving newlines
+        return response.strip()
 
     def generate_response(
         self,
@@ -101,5 +105,5 @@ class BaseAgent(ABC):
         logger.debug(f"{self.name} generating with params: {params}")
         raw = generate_text(prompt, **params)
         response = self.extract_response(raw)
-        logger.info(f"{self.name} responded: {response[:120]} ...")
+        logger.info(f"{self.name} responded:\n{response}")
         return response

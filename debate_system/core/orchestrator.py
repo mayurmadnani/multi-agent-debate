@@ -65,12 +65,28 @@ class DebateOrchestrator:
         return agents
 
     def run_debate(self, question: str, rounds: Optional[int] = None, enable_summary: Optional[bool] = None) -> Dict[str, object]:
+        gen = self.stream_debate(question, rounds, enable_summary)
+        last_result = {}
+        for result in gen:
+            last_result = result
+        return last_result
+
+    def stream_debate(self, question: str, rounds: Optional[int] = None, enable_summary: Optional[bool] = None):
+        """Yields intermediate debate results for streaming."""
         question = ensure_non_empty(question, "question")
         rounds = rounds or self.config.default_rounds
         enable_summary = self.config.enable_summary if enable_summary is None else enable_summary
 
         history: List[Dict[str, object]] = [{"speaker": "User", "content": question}]
         self.memory.add_entry(key="initial_question", value=question, source="user")
+        
+        yield {
+            "question": question,
+            "history": history,
+            "summary": None,
+            "error": None,
+            "status": "started"
+        }
 
         for round_idx in range(1, rounds + 1):
             logger.info(f"Round {round_idx}/{rounds}")
@@ -81,6 +97,13 @@ class DebateOrchestrator:
                     "content": response,
                     "round": round_idx,
                 })
+                yield {
+                    "question": question,
+                    "history": history,
+                    "summary": None,
+                    "error": None,
+                    "status": "debating"
+                }
 
         summary_text: Optional[str] = None
         if enable_summary and "summary" in self.agents:
@@ -90,11 +113,12 @@ class DebateOrchestrator:
             except Exception as exc:
                 logger.error(f"Summary generation failed: {exc}")
 
-        return {
+        yield {
             "question": question,
             "history": history,
             "summary": summary_text,
             "error": None,
+            "status": "completed"
         }
 
     def _get_agent_response(

@@ -10,18 +10,6 @@ from ..core.memory import MemoryStore
 class SummaryAgent(BaseAgent):
     """Produces a concise summary of the debate."""
 
-    def extract_response(self, raw_output: str) -> str:
-        # Preserve multi-line summaries instead of truncating to the first line.
-        response = raw_output.strip()
-        for prefix in (f"{self.name}:", f"[{self.name}]"):
-            if response.startswith(prefix):
-                response = response[len(prefix):].strip()
-                break
-
-        lines = [line.rstrip() for line in response.splitlines()]
-        filtered = [line for line in lines if line.strip()]
-        return "\n".join(filtered)
-
     def get_system_prompt(self) -> str:
         return (
             f"{self.instruction}\n"

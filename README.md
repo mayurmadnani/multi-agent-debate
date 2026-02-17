@@ -5,15 +5,20 @@ A production-oriented, multi-round philosophical debate system coordinating mult
 ## Table of Contents
 - [Overview](#overview)
 - [Key features](#key-features)
+  - [Multi-agent architecture](#multi-agent-architecture)
+  - [Tool system (optional / configurable)](#tool-system-optional--configurable)
+  - [Architecture & operations](#architecture--operations)
 - [Architecture](#architecture)
-- [Requirements](#requirements)
+  - [Component flow](#component-flow)
+  - [Debate turn sequence](#debate-turn-sequence)
+  - [Design patterns (implementation-level)](#design-patterns-implementation-level)
+- [Project structure](#project-structure)
 - [Quickstart](#quickstart)
 - [Usage](#usage)
   - [CLI](#cli)
   - [Web UI (Streamlit)](#web-ui-streamlit)
   - [Python API](#python-api)
   - [Testing](#testing)
-- [Project structure](#project-structure)
 
 ---
 
@@ -168,6 +173,20 @@ sequenceDiagram
 
 ---
 
+## Project structure
+
+```text
+debate_system/
+  agents/        # Agent implementations (Socrates/Plato/Aristotle/Summary)
+  core/          # Config, memory, tools, orchestration
+  inference/     # Model manager + backend implementations
+  interfaces/    # CLI, Web UI, API wrapper
+configs/         # YAML settings (models/personas/tools)
+data/            # Default location for persisted memory (if enabled)
+tests/           # Unit tests (tools/agents/etc.)
+```
+---
+
 ## Quickstart
 
 ```bash
@@ -215,6 +234,18 @@ Discover supported flags/options:
 python -m debate_system.interfaces.cli --help
 ```
 
+### Python API
+
+```python
+from debate_system.interfaces.api import DebateAPI
+
+api = DebateAPI()
+result = api.ask("What is the nature of consciousness?", rounds=3, enable_summary=True)
+
+for entry in result["history"]:
+  print(f"{entry['speaker']}: {entry['content']}")
+```
+
 ### Web UI (Streamlit)
 
 ```bash
@@ -226,18 +257,6 @@ Alternative invocation:
 python -m streamlit run debate_system/interfaces/web.py
 ```
 
-### Python API
-
-```python
-from debate_system.interfaces.api import DebateAPI
-
-api = DebateAPI()
-result = api.ask("What is the nature of consciousness?", rounds=3)
-
-for entry in result["history"]:
-  print(f"{entry['speaker']}: {entry['content']}")
-```
-
 ### Testing
 
 ```bash
@@ -245,16 +264,3 @@ pytest -q
 ```
 
 ---
-
-## Project structure
-
-```text
-debate_system/
-  agents/        # Agent implementations (Socrates/Plato/Aristotle/Summary)
-  core/          # Config, memory, tools, orchestration
-  inference/     # Model manager + backend implementations
-  interfaces/    # CLI, Web UI, API wrapper
-configs/         # YAML settings (models/personas/tools)
-data/            # Default location for persisted memory (if enabled)
-tests/           # Unit tests (tools/agents/etc.)
-```

@@ -2,6 +2,8 @@
 
 A production-oriented, multi-round philosophical debate system coordinating multiple agents (Socrates/Plato/Aristotle) with optional tool use (search/calculation/time) to explore complex questions through structured argumentation.
 
+https://github.com/user-attachments/assets/6ac0e626-6a1c-4d34-9bc3-faf9eb195354
+
 ## Table of Contents
 - [Overview](#overview)
 - [Key features](#key-features)
@@ -219,6 +221,7 @@ Notes:
 
 ### CLI
 
+![](assets/cli.png)
 Interactive mode:
 ```bash
 python -m debate_system.interfaces.cli
@@ -235,6 +238,7 @@ python -m debate_system.interfaces.cli --help
 ```
 
 ### Python API
+![](assets/api.png)
 
 ```python
 from debate_system.interfaces.api import DebateAPI
@@ -247,6 +251,7 @@ for entry in result["history"]:
 ```
 
 ### Web UI (Streamlit)
+![](assets/webui.png)
 
 ```bash
 streamlit run debate_system/interfaces/web.py
